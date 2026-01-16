@@ -1,0 +1,100 @@
+package com.demo.javabasic;
+
+import java.util.Scanner;
+
+public class CalculatorDemo {
+	
+    // Static variable (shared across all objects)
+	static String applicationName = "Console Calculator";
+
+    // Instance variable (belongs to an object)
+	int instanceCounter = 0;
+
+    public static void main(String[] args) {
+
+        // Local variables (exist only inside this method)
+//        int intValue;
+//        double doubleValue;
+        int intValue = 10;
+        double doubleValue = 20.5;
+
+        System.out.println("Local int value: " + intValue);
+        System.out.println("Local double value: " + doubleValue);
+
+        // Primitive data type declarations with explanation
+        byte b = 10;          // 1 byte – small integer
+        short s = 1000;       // 2 bytes – medium integer
+        int i = 50000;        // 4 bytes – commonly used integer
+        long l = 1000000L;    // 8 bytes – large integer
+        float f = 5.5f;       // 4 bytes – decimal with less precision
+        double d = 99.99;     // 8 bytes – decimal with high precision
+        char c = 'A';         // 2 bytes – single character
+        boolean flag = true;  // 1 bit – true or false
+
+        System.out.println("\n--- Primitive Data Types Demo ---");
+        System.out.println("byte value: " + b);
+        System.out.println("short value: " + s);
+        System.out.println("int value: " + i);
+        System.out.println("long value: " + l);
+        System.out.println("float value: " + f);
+        System.out.println("double value: " + d);
+        System.out.println("char value: " + c);
+        System.out.println("boolean value: " + flag);
+        
+        System.out.println("Welcome to " + applicationName);
+        System.out.println("--------------------------------");
+
+        Scanner sc = new Scanner(System.in);
+
+        // Accepting user input
+        System.out.print("Enter first number: ");
+        if (!sc.hasNextDouble()) {
+            System.out.println("Invalid input! Please enter numeric values.");
+            sc.close();   // ✅ close resource
+            return;
+        }
+        double num1 = sc.nextDouble();
+
+        System.out.print("Enter second number: ");
+        if (!sc.hasNextDouble()) {
+            System.out.println("Invalid input! Please enter numeric values.");
+            sc.close();   // ✅ close resource
+            return;
+        }
+        double num2 = sc.nextDouble();
+
+        // Arithmetic operations
+        double sum = num1 + num2;
+        double difference = num1 - num2;
+        double product = num1 * num2;
+
+        // Handling division safely
+        if (num2 != 0) {
+            double quotient = num1 / num2;
+            System.out.printf("Division: %.2f / %.2f = %.2f%n", num1, num2, quotient);
+        } else {
+            System.out.println("Division not possible (division by zero)");
+        }
+
+        // Formatted output
+        System.out.printf("Addition: %.2f + %.2f = %.2f%n", num1, num2, sum);
+        System.out.printf("Subtraction: %.2f - %.2f = %.2f%n", num1, num2, difference);
+        System.out.printf("Multiplication: %.2f * %.2f = %.2f%n", num1, num2, product);
+
+        // Type casting examples
+        int castedInt = (int) num1;     // Explicit casting (double → int)
+        double implicitDouble = i;      // Implicit casting (int → double)
+
+        System.out.println("\nType Casting Examples:");
+        System.out.println("Double to Int (Explicit): " + castedInt);
+        System.out.println("Int to Double (Implicit): " + implicitDouble);
+
+        // Instance variable usage
+        CalculatorDemo obj = new CalculatorDemo();
+        obj.instanceCounter++;
+        System.out.println("\nInstance Counter Value: " + obj.instanceCounter);
+
+        sc.close();
+    }
+}
+
