@@ -1,0 +1,107 @@
+package com.demo.javabasic;
+
+public class ModularCalculator {
+
+
+
+/**
+ * ModularCalculator
+ * ------------------
+ * A calculator application demonstrating:
+ * - Method design
+ * - Method overloading
+ * - Exception handling
+ * - Pass-by-value
+ * - Code reusability
+ *
+ * Author: Gauri Shetye
+ */
+
+    public static void main(String[] args) {
+
+        // Testing integer operations
+        System.out.println("Addition (int): " + add(10, 5));
+        System.out.println("Subtraction (int): " + subtract(10, 5));
+        System.out.println("Multiplication (int): " + multiply(10, 5));
+
+        // Testing double operations
+        System.out.println("Addition (double): " + add(10.5, 5.5));
+        System.out.println("Division (double): " + divide(10.0, 2.0));
+
+        // Testing divide by zero handling
+        try {
+            divide(10, 0);
+        } catch (ArithmeticException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        // Pass-by-value demonstration
+        int number = 50;
+        System.out.println("Before method call: " + number);
+        modifyValue(number);
+        System.out.println("After method call: " + number);
+    }
+
+    /**
+     * Adds two integers
+     */
+    public static int add(int a, int b) {
+        return a + b;
+    }
+
+    /**
+     * Adds two double values (Method Overloading)
+     */
+    public static double add(double a, double b) {
+        return a + b;
+    }
+
+    /**
+     * Subtracts two integers
+     */
+    public static int subtract(int a, int b) {
+        return a - b;
+    }
+
+    /**
+     * Multiplies two integers
+     */
+    public static int multiply(int a, int b) {
+        return a * b;
+    }
+
+    /**
+     * Divides two integers
+     * Throws exception if divisor is zero
+     */
+    public static int divide(int a, int b) {
+        validateDivisor(b);
+        return a / b;
+    }
+
+    /**
+     * Divides two double values
+     */
+    public static double divide(double a, double b) {
+        validateDivisor(b);
+        return a / b;
+    }
+
+    /**
+     * Utility method to validate divisor
+     */
+    private static void validateDivisor(double divisor) {
+        if (divisor == 0) {
+            throw new ArithmeticException("Division by zero is not allowed");
+        }
+    }
+
+    /**
+     * Demonstrates pass-by-value behavior
+     */
+    public static void modifyValue(int value) {
+        value = value + 100;
+        System.out.println("Inside method: " + value);
+    }
+}
+
