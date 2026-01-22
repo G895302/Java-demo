@@ -1,0 +1,117 @@
+package com.demo.javabasic;
+
+import java.util.Scanner;
+
+public class ArrayDataAnalysis {
+
+    // Method to calculate sum
+    static int calculateSum(int[] arr) {
+        int sum = 0;
+        for (int num : arr) {
+            sum += num;
+        }
+        return sum;
+    }
+
+    // Method to find maximum
+    static int findMax(int[] arr) {
+        int max = arr[0];
+        for (int num : arr) {
+            if (num > max)
+                max = num;
+        }
+        return max;
+    }
+
+    // Method to find minimum
+    static int findMin(int[] arr) {
+        int min = arr[0];
+        for (int num : arr) {
+            if (num < min)
+                min = num;
+        }
+        return min;
+    }
+
+    // Manual sorting using Bubble Sort
+    static void sortArray(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // Display array elements
+    static void displayArray(int[] arr) {
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            // Single Dimensional Array
+            System.out.print("Enter number of elements: ");
+            int size = sc.nextInt();
+
+            int[] numbers = new int[size];
+
+            for (int i = 0; i < size; i++) {
+                System.out.print("Enter element " + (i + 1) + ": ");
+                numbers[i] = sc.nextInt();
+            }
+
+            // Data analysis
+            int sum = calculateSum(numbers);
+            double average = (double) sum / numbers.length;
+            int max = findMax(numbers);
+            int min = findMin(numbers);
+
+            // Sorting
+            sortArray(numbers);
+
+            // Output
+            System.out.println("\n----- Data Analysis Result -----");
+            System.out.println("Sum        : " + sum);
+            System.out.println("Average    : " + average);
+            System.out.println("Maximum    : " + max);
+            System.out.println("Minimum    : " + min);
+
+            System.out.print("Sorted Data: ");
+            displayArray(numbers);
+
+            // Multi-Dimensional Array
+            int[][] matrix = {
+                    {10, 20, 30},
+                    {40, 50, 60}
+            };
+
+            System.out.println("\n----- 2D Array Output -----");
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix[i].length; j++) {
+                    System.out.print(matrix[i][j] + " ");
+                }
+                System.out.println();
+            }
+
+            // Exception demonstration
+            System.out.println("\nTrying to access invalid index...");
+            System.out.println(numbers[100]);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: Array index out of bounds!");
+        }
+
+        sc.close();
+    }
+}
+
