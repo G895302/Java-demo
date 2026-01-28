@@ -1,0 +1,83 @@
+package com.demo.javabasic;
+
+1. Base Class: Employee
+
+class Employee {
+    protected int id;
+    protected String name;
+
+    Employee(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    // Method to be overridden
+    double calculateSalary() {
+        return 0;
+    }
+
+    void display() {
+        System.out.println("ID: " + id + ", Name: " + name +
+                ", Salary: " + calculateSalary());
+    }
+}
+
+2. Child Class: FullTimeEmployee
+
+package com.demo.javabasic;
+
+class FullTimeEmployee extends Employee {
+    private double monthlySalary;
+
+    FullTimeEmployee(int id, String name, double monthlySalary) {
+        super(id, name);   // using super keyword
+        this.monthlySalary = monthlySalary;
+    }
+
+    @Override
+    double calculateSalary() {
+        return monthlySalary;
+    }
+}
+
+3. Child Class: PartTimeEmployee
+
+package com.demo.javabasic;
+
+class PartTimeEmployee extends Employee {
+    private int hoursWorked;
+    private double hourlyRate;
+
+    PartTimeEmployee(int id, String name, int hoursWorked, double hourlyRate) {
+        super(id, name);
+        this.hoursWorked = hoursWorked;
+        this.hourlyRate = hourlyRate;
+    }
+
+    @Override
+    double calculateSalary() {
+        return hoursWorked * hourlyRate;
+    }
+}
+
+4. Main Class: Demonstrating Polymorphism
+
+package com.demo.javabasic;
+
+public class PayrollSystem {
+    public static void main(String[] args) {
+
+        // Parent reference holding child objects
+        Employee e1 = new FullTimeEmployee(101, "Vibhor", 50000);
+        Employee e2 = new PartTimeEmployee(102, "Gauri", 40, 500);
+
+        Employee[] employees = { e1, e2 };
+
+        System.out.println("----- Payroll Summary -----");
+        for (Employee emp : employees) {
+            emp.display();   // runtime polymorphism
+        }
+    }
+}
+
+
