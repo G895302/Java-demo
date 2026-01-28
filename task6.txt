@@ -1,0 +1,122 @@
+1.BankAccount Class (Core OOP Model)
+
+package com.demo.javabasic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BankAccount {
+
+    private int accountNumber;
+    private String accountHolderName;
+    private double balance;
+    private List<String> transactionHistory;
+
+    // Constructor
+    public BankAccount(int accountNumber, String accountHolderName, double initialBalance) {
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.balance = initialBalance;
+        this.transactionHistory = new ArrayList<>();
+        transactionHistory.add("Account created with balance: " + initialBalance);
+    }
+
+    // Getters
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    // Deposit method
+    public void deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("Invalid deposit amount!");
+            return;
+        }
+        balance += amount;
+        transactionHistory.add("Deposited: " + amount);
+        System.out.println("Deposit successful. Current Balance: " + balance);
+    }
+
+    // Withdrawal method
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("Invalid withdrawal amount!");
+            return;
+        }
+        if (amount > balance) {
+            System.out.println("Insufficient balance!");
+            return;
+        }
+        balance -= amount;
+        transactionHistory.add("Withdrawn: " + amount);
+        System.out.println("Withdrawal successful. Current Balance: " + balance);
+    }
+
+    // Print transaction history
+    public void printTransactionHistory() {
+        System.out.println("\nTransaction History for Account: " + accountNumber);
+        for (String transaction : transactionHistory) {
+            System.out.println(transaction);
+        }
+    }
+}
+
+2.Bank Class (Object Interaction)
+package com.demo.javabasic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Bank {
+
+    private List<BankAccount> accounts = new ArrayList<>();
+
+    public void addAccount(BankAccount account) {
+        accounts.add(account);
+        System.out.println("Account added: " + account.getAccountNumber());
+    }
+
+    public BankAccount findAccount(int accountNumber) {
+        for (BankAccount account : accounts) {
+            if (account.getAccountNumber() == accountNumber) {
+                return account;
+            }
+        }
+        return null;
+    }
+}
+
+3. Main Class (Execution & Testing)
+
+package com.demo.javabasic;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Bank bank = new Bank();
+
+        BankAccount acc1 = new BankAccount(101, "Gauri Shetye", 5000);
+        BankAccount acc2 = new BankAccount(102, "Ankit Patil", 3000);
+
+        bank.addAccount(acc1);
+        bank.addAccount(acc2);
+
+        acc1.deposit(2000);
+        acc1.withdraw(1500);
+
+        acc2.deposit(1000);
+        acc2.withdraw(5000); // Invalid case
+
+        acc1.printTransactionHistory();
+        acc2.printTransactionHistory();
+    }
+}
