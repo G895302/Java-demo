@@ -1,0 +1,121 @@
+1. Payment Interface (Abstraction)
+
+package com.demo.javabasic;
+
+public interface Payment {
+	void pay(double amount);
+
+}
+
+2.package com.demo.javabasic;
+
+public interface Refundable {
+	void refund(double amount);
+
+}
+
+3.UPI Payment Implementation
+
+package com.demo.javabasic;
+
+public class UPIPayment implements Payment, Refundable {
+
+    @Override
+    public void pay(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Invalid UPI payment amount!");
+        }
+        System.out.println("[UPI] Payment of ₹" + amount + " successful.");
+    }
+
+    @Override
+    public void refund(double amount) {
+        System.out.println("[UPI] Refund of ₹" + amount + " processed.");
+    }
+}
+
+4.Card Payment Implementation
+
+package com.demo.javabasic;
+
+public class CardPayment implements Payment {
+
+    @Override
+    public void pay(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Invalid Card payment amount!");
+        }
+        System.out.println("[CARD] Payment of ₹" + amount + " successful.");
+    }
+}
+
+5.Net Banking Payment Implementation
+package com.demo.javabasic;
+
+public class NetBankingPayment implements Payment {
+
+    @Override
+    public void pay(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Invalid NetBanking payment amount!");
+        }
+        System.out.println("[NET BANKING] Payment of ₹" + amount + " successful.");
+    }
+}
+
+6.Payment Gateway (Loose Coupling + Dynamic Switching)
+
+package com.demo.javabasic;
+
+public class PaymentGateway {
+
+    private Payment paymentMode;
+
+    public void setPaymentMode(Payment paymentMode) {
+        this.paymentMode = paymentMode;
+        System.out.println("Payment mode switched to: " 
+                           + paymentMode.getClass().getSimpleName());
+    }
+
+    public void processPayment(double amount) {
+        try {
+            paymentMode.pay(amount);
+            System.out.println("Transaction completed.\n");
+        } catch (Exception e) {
+            System.out.println("Transaction failed: " + e.getMessage() + "\n");
+        }
+    }
+}
+
+7.Main Class – Payment Simulation
+package com.demo.javabasic;
+
+public class PaymentApp {
+
+    public static void main(String[] args) {
+
+        PaymentGateway gateway = new PaymentGateway();
+
+        // UPI Payment
+        Payment upi = new UPIPayment();
+        gateway.setPaymentMode(upi);
+        gateway.processPayment(1500);
+
+        // Card Payment
+        Payment card = new CardPayment();
+        gateway.setPaymentMode(card);
+        gateway.processPayment(2500);
+
+        // Net Banking Payment
+        Payment netBanking = new NetBankingPayment();
+        gateway.setPaymentMode(netBanking);
+        gateway.processPayment(-500); // Invalid case
+
+        // Refund using interface reference
+        Refundable refundable = (Refundable) upi;
+        refundable.refund(500);
+    }
+}
+
+
+
