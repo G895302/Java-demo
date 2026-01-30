@@ -1,0 +1,115 @@
+1. Student Class
+package com.demo.javabasic;
+
+public class Student {
+    private int id;
+    private String name;
+    private double marks;
+
+    public Student(int id, String name, double marks) {
+        this.id = id;
+        this.name = name;
+        this.marks = marks;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getMarks() {
+        return marks;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d | Name: %-10s | Marks: %.2f", id, name, marks);
+    }
+
+    // Used for removing duplicates
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Student)) return false;
+        Student s = (Student) obj;
+        return id == s.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+}
+
+2. Comparator for Sorting
+
+package com.demo.javabasic;
+
+import java.util.Comparator;
+public class StudentComparator implements Comparator<Student> {
+
+    @Override
+    public int compare(Student s1, Student s2) {
+        return Double.compare(s2.getMarks(), s1.getMarks()); // Descending order
+    }
+}
+
+3. Main Application
+
+package com.demo.javabasic;
+
+import java.util.*;
+
+public class StudentManagementApp {
+
+    public static void main(String[] args) {
+
+        // 1. ArrayList to store students
+        List<Student> students = new ArrayList<>();
+
+        students.add(new Student(101, "Gauri", 78.5));
+        students.add(new Student(102, "Vihor", 85.0));
+        students.add(new Student(103, "Abhishek", 72.3));
+        students.add(new Student(101, "Swastika", 78.5)); // duplicate
+
+        // 2. Remove duplicates using Set
+        Set<Student> uniqueStudents = new HashSet<>(students);
+        students = new ArrayList<>(uniqueStudents);
+
+        // 3. HashMap for fast lookup
+        Map<Integer, Student> studentMap = new HashMap<>();
+        for (Student s : students) {
+            studentMap.put(s.getId(), s);
+        }
+
+        // Lookup example
+        System.out.println("\n🔍 Lookup Student with ID 102:");
+        System.out.println(studentMap.get(102));
+
+        // 4. Sorting using Comparator
+        students.sort(new StudentComparator());
+
+        // 5. Enhanced for loop + formatted report
+        System.out.println("\n📊 Sorted Student Report (By Marks):");
+        System.out.println("----------------------------------");
+        for (Student s : students) {
+            System.out.println(s);
+        }
+
+        // 6. Filter students above 75 marks
+        System.out.println("\n🏆 Students Scoring Above 75:");
+        System.out.println("-----------------------------");
+        for (Student s : students) {
+            if (s.getMarks() > 75) {
+                System.out.println(s);
+            }
+        }
+
+        // 7. Collection Hierarchy Demonstration
+        Collection<Student> collection = students; // List → Collection
+        System.out.println("\n📦 Total Students (via Collection): " + collection.size());
+    }
+}
