@@ -1,0 +1,72 @@
+1. Custom Exception Class (Unchecked)
+
+package com.demo.javabasic;
+
+public class InsufficientBalanceException extends RuntimeException {
+
+    public InsufficientBalanceException(String message) {
+        super(message);
+    }
+}
+
+2. Main Program with Exception Handling
+
+package com.demo.javabasic;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class BankApplication {
+
+    static double balance = 5000;
+
+    public static void main(String[] args) {
+
+        try {
+            withdraw(7000);   // Custom Exception
+            divide(10, 0);    // ArithmeticException
+            readFile();       // Checked Exception
+
+        } catch (InsufficientBalanceException e) {
+            System.err.println("Custom Exception: " + e.getMessage());
+
+        } catch (ArithmeticException e) {
+            System.err.println("Runtime Exception: Division by zero is not allowed.");
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Checked Exception: File not found.");
+
+        } catch (Exception e) {
+            System.err.println("General Exception: " + e.getMessage());
+
+        } finally {
+            System.out.println("Transaction completed. Resources closed.");
+        }
+    }
+
+    // Custom exception thrown manually
+    static void withdraw(double amount) {
+        if (amount > balance) {
+            throw new InsufficientBalanceException(
+                "Withdrawal failed! Balance: " + balance
+            );
+        }
+        balance -= amount;
+        System.out.println("Withdrawal successful. Remaining balance: " + balance);
+    }
+
+    // Runtime exception example
+    static void divide(int a, int b) {
+        int result = a / b;
+        System.out.println("Result: " + result);
+    }
+
+    // Checked exception example
+    static void readFile() throws FileNotFoundException {
+        File file = new File("data.txt");
+        Scanner sc = new Scanner(file);
+        System.out.println(sc.nextLine());
+        sc.close();
+    }
+}
