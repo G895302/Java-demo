@@ -1,0 +1,89 @@
+1. Java Program: User Data Storage System
+
+package com.demo.javabasic;
+
+import java.io.*;
+import java.util.Scanner;
+
+public class UserDataApp {
+
+    private static final String FILE_NAME = "userdata.txt";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("=== User Data Storage System ===");
+
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter Email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Enter Phone Number: ");
+        String phone = scanner.nextLine();
+
+        writeUserData(name, email, phone);
+        readUserData();
+
+        scanner.close();
+    }
+
+    // Write user data to file (APPEND mode)
+    private static void writeUserData(String name, String email, String phone) {
+        File file = new File(FILE_NAME);
+
+        try {
+            // Create file if it doesn't exist
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file, true); // append = true
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            bw.write("Name: " + name);
+            bw.newLine();
+            bw.write("Email: " + email);
+            bw.newLine();
+            bw.write("Phone: " + phone);
+            bw.newLine();
+            bw.write("-------------------------");
+            bw.newLine();
+
+            bw.close();
+            fw.close();
+
+            System.out.println("\n✅ User data saved successfully!");
+
+        } catch (IOException e) {
+            System.out.println("❌ Error writing to file: " + e.getMessage());
+        }
+    }
+
+    // Read user data from file
+    private static void readUserData() {
+        File file = new File(FILE_NAME);
+
+        System.out.println("\n📄 Stored User Records:");
+
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            br.close();
+            fr.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("❌ File not found.");
+        } catch (IOException e) {
+            System.out.println("❌ Error reading file: " + e.getMessage());
+        }
+    }
+}
+
