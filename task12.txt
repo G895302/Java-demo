@@ -1,0 +1,97 @@
+1.Student Class (Serializable)
+
+package com.demo.javabasic;
+
+
+import java.io.Serializable;
+
+public class StudentSerializable implements Serializable {
+
+    // Important for version control during deserialization
+    private static final long serialVersionUID = 1L;
+
+    private int id;
+    private String name;
+    private String email;
+
+    // Sensitive data should not be serialized
+    private transient String password;
+
+    public StudentSerializable(int id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public void display() {
+        System.out.println("ID       : " + id);
+        System.out.println("Name     : " + name);
+        System.out.println("Email    : " + email);
+        System.out.println("Password : " + password);
+    }
+}
+
+2.Serialization – Writing Object to File
+
+package com.demo.javabasic;
+
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
+public class SerializeStudent {
+
+    public static void main(String[] args) {
+
+    	StudentSerializable student = new StudentSerializable(
+                101,
+                "Gauri Shetye",
+                "gauri@email.com",
+                "secure123"
+        );
+
+        try (ObjectOutputStream oos =
+                     new ObjectOutputStream(new FileOutputStream("student.ser"))) {
+
+            oos.writeObject(student);
+            System.out.println("✅ Student object serialized successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+3.Deserialization – Reading Object from File
+
+package com.demo.javabasic;
+
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+
+public class DeserializeStudent {
+
+    public static void main(String[] args) {
+
+        try (ObjectInputStream ois =
+                     new ObjectInputStream(new FileInputStream("student.ser"))) {
+
+        	StudentSerializable restoredStudent = (StudentSerializable) ois.readObject();
+
+            System.out.println("✅ Student object deserialized successfully!");
+            restoredStudent.display();
+
+            // Validate restored data
+            if (restoredStudent != null) {
+                System.out.println("✔ Object validation successful");
+            }
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("❌ Student class not found!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
