@@ -1,0 +1,219 @@
+#1. Product Class
+package com.demo.javabasic;
+
+import java.io.Serializable;
+
+public class Product implements Serializable {
+	private static final long serialVersionUID = 1L; 
+	
+    private String id;
+    private String name;
+    private int quantity;
+    private double price;
+
+    public Product(String id, String name, int quantity, double price) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    // Getters
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public int getQuantity() { return quantity; }
+    public double getPrice() { return price; }
+
+    // Setters
+    public void setName(String name) { this.name = name; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setPrice(double price) { this.price = price; }
+
+    @Override
+    public String toString() {
+        return id + "," + name + "," + quantity + "," + price;
+    }
+}
+
+#2. Inventory Management System (Main Class)
+package com.demo.javabasic;
+
+import java.io.*;
+import java.util.*;
+
+public class InventorySystem {
+
+    private static final String FILE_NAME = "inventory.txt";
+    private static HashMap<String, Product> inventory = new HashMap<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        loadFromFile();
+
+        while (true) {
+            System.out.println("\n===== Inventory Management System =====");
+            System.out.println("1. Add Product");
+            System.out.println("2. Update Product");
+            System.out.println("3. Delete Product");
+            System.out.println("4. View Products");
+            System.out.println("5. Inventory Summary");
+            System.out.println("6. Exit");
+            System.out.print("Choose option: ");
+
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+
+                switch (choice) {
+                    case 1 -> addProduct();
+                    case 2 -> updateProduct();
+                    case 3 -> deleteProduct();
+                    case 4 -> viewProducts();
+                    case 5 -> inventorySummary();
+                    case 6 -> {
+                        saveToFile();
+                        System.out.println("Data saved. Exiting...");
+                        return;
+                    }
+                    default -> System.out.println("Invalid option!");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter valid numeric choice.");
+            }
+        }
+    }
+
+    // Add Product
+    private static void addProduct() {
+        System.out.print("Enter Product ID: ");
+        String id = scanner.nextLine();
+
+        if (inventory.containsKey(id)) {
+            System.out.println("Product ID already exists!");
+            return;
+        }
+
+        try {
+            System.out.print("Enter Name: ");
+            String name = scanner.nextLine();
+
+            System.out.print("Enter Quantity: ");
+            int quantity = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter Price: ");
+            double price = Double.parseDouble(scanner.nextLine());
+
+            Product product = new Product(id, name, quantity, price);
+            inventory.put(id, product);
+
+            System.out.println("Product added successfully!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Quantity and Price must be numeric.");
+        }
+    }
+
+    // Update Product
+    private static void updateProduct() {
+        System.out.print("Enter Product ID to update: ");
+        String id = scanner.nextLine();
+
+        Product product = inventory.get(id);
+
+        if (product == null) {
+            System.out.println("Product not found!");
+            return;
+        }
+
+        try {
+            System.out.print("Enter New Name: ");
+            product.setName(scanner.nextLine());
+
+            System.out.print("Enter New Quantity: ");
+            product.setQuantity(Integer.parseInt(scanner.nextLine()));
+
+            System.out.print("Enter New Price: ");
+            product.setPrice(Double.parseDouble(scanner.nextLine()));
+
+            System.out.println("Product updated successfully!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid numeric input!");
+        }
+    }
+
+    // Delete Product
+    private static void deleteProduct() {
+        System.out.print("Enter Product ID to delete: ");
+        String id = scanner.nextLine();
+
+        if (inventory.remove(id) != null) {
+            System.out.println("Product deleted successfully!");
+        } else {
+            System.out.println("Product not found!");
+        }
+    }
+
+    // View Products
+    private static void viewProducts() {
+        if (inventory.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
+
+        System.out.println("\nID\tName\tQuantity\tPrice");
+        for (Product product : inventory.values()) {
+            System.out.println(product.getId() + "\t" +
+                    product.getName() + "\t" +
+                    product.getQuantity() + "\t\t" +
+                    product.getPrice());
+        }
+    }
+
+    // Inventory Summary
+    private static void inventorySummary() {
+        int totalItems = 0;
+        double totalValue = 0;
+
+        for (Product product : inventory.values()) {
+            totalItems += product.getQuantity();
+            totalValue += product.getQuantity() * product.getPrice();
+        }
+
+        System.out.println("Total Products: " + inventory.size());
+        System.out.println("Total Quantity: " + totalItems);
+        System.out.println("Total Inventory Value: ₹" + totalValue);
+    }
+
+    // Save to File
+    private static void saveToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (Product product : inventory.values()) {
+                writer.write(product.toString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving file.");
+        }
+    }
+
+    // Load from File
+    private static void loadFromFile() {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) return;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                String id = data[0];
+                String name = data[1];
+                int quantity = Integer.parseInt(data[2]);
+                double price = Double.parseDouble(data[3]);
+
+                inventory.put(id, new Product(id, name, quantity, price));
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading file.");
+        }
+    }
+}

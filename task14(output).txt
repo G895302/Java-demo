@@ -1,0 +1,61 @@
+===== Inventory Management System =====
+1. Add Product
+2. Update Product
+3. Delete Product
+4. View Products
+5. Inventory Summary
+6. Exit
+Choose option: 1
+Enter Product ID: 011
+Enter Name: table
+Enter Quantity: 12
+Enter Price: 20000
+Product added successfully!
+
+===== Inventory Management System =====
+1. Add Product
+2. Update Product
+3. Delete Product
+4. View Products
+5. Inventory Summary
+6. Exit
+Choose option: 4
+
+ID	Name	Quantity	Price
+011	table	12		20000.0
+
+===== Inventory Management System =====
+1. Add Product
+2. Update Product
+3. Delete Product
+4. View Products
+5. Inventory Summary
+6. Exit
+Choose option: 2
+Enter Product ID to update: 011
+Enter New Name: Table
+Enter New Quantity: 20
+Enter New Price: 50000
+Product updated successfully!
+
+===== Inventory Management System =====
+1. Add Product
+2. Update Product
+3. Delete Product
+4. View Products
+5. Inventory Summary
+6. Exit
+Choose option: 5
+Total Products: 1
+Total Quantity: 20
+Total Inventory Value: ₹1000000.0
+
+===== Inventory Management System =====
+1. Add Product
+2. Update Product
+3. Delete Product
+4. View Products
+5. Inventory Summary
+6. Exit
+Choose option: 6
+Data saved. Exiting...
