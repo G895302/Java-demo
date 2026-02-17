@@ -1,0 +1,129 @@
+1️. Task Class (Simulating Real Work)
+package com.demo.javabasic;
+
+import java.util.concurrent.Callable;
+
+public class Task implements Callable<String> {
+
+    private final int taskId;
+
+    public Task(int taskId) {
+        this.taskId = taskId;
+    }
+
+    @Override
+    public String call() throws Exception {
+        System.out.println("Task " + taskId + " started by " + Thread.currentThread().getName());
+
+        // Simulate processing time
+        Thread.sleep(1000);
+
+        // Simulate failure for demonstration
+        if (taskId == 5) {
+            throw new RuntimeException("Error in Task " + taskId);
+        }
+
+        return "Task " + taskId + " completed successfully";
+    }
+}
+
+2. Traditional Thread Approach
+package com.demo.javabasic;
+
+public class TraditionalThreads {
+
+    public static void runTraditional() {
+        long start = System.currentTimeMillis();
+
+        for (int i = 1; i <= 10; i++) {
+            int id = i;
+            new Thread(() -> {
+                System.out.println("Task " + id + " started by " + Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Task " + id + " completed");
+            }).start();
+        }
+
+        long end = System.currentTimeMillis();
+        System.out.println("Traditional Threads Time: " + (end - start) + " ms");
+    }
+}
+
+3.ExecutorService Implementation (Recommended)
+package com.demo.javabasic;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
+public class ExecutorTaskScheduler {
+
+    public static void main(String[] args) {
+
+        int poolSize = 3;
+
+        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+
+        List<Future<String>> futures = new ArrayList<>();
+
+        long start = System.currentTimeMillis();
+
+        // Submit 10 tasks
+        for (int i = 1; i <= 10; i++) {
+            futures.add(executor.submit(new Task(i)));
+        }
+
+        // Monitor task execution
+        for (Future<String> future : futures) {
+            try {
+                System.out.println(future.get()); // Waits for task completion
+            } catch (ExecutionException e) {
+                System.out.println("Task failed: " + e.getCause().getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // Graceful shutdown
+        executor.shutdown();
+
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+        }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("Executor Framework Time: " + (end - start) + " ms");
+    }
+}
+
+OUTPUT
+Task 1 started by pool-1-thread-1
+Task 3 started by pool-1-thread-3
+Task 2 started by pool-1-thread-2
+Task 4 started by pool-1-thread-3
+Task 5 started by pool-1-thread-1
+Task 1 completed successfully
+Task 2 completed successfully
+Task 3 completed successfully
+Task 6 started by pool-1-thread-2
+Task 4 completed successfully
+Task 7 started by pool-1-thread-3
+Task 8 started by pool-1-thread-1
+Task failed: Error in Task 5
+Task 6 completed successfully
+Task 9 started by pool-1-thread-2
+Task 7 completed successfully
+Task 10 started by pool-1-thread-3
+Task 8 completed successfully
+Task 9 completed successfully
+Task 10 completed successfully
+Executor Framework Time: 4009 ms
