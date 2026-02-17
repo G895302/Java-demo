@@ -1,0 +1,92 @@
+Step 1 – TicketCounter (Shared Resource)
+package com.demo.javabasic;
+
+class TicketCounter {
+
+    private int availableTickets;
+
+    public TicketCounter(int tickets) {
+        this.availableTickets = tickets;
+    }
+
+    // ❌ Without synchronization (Race Condition)
+    public void bookTicketUnsafe(String userName, int ticketsRequested) {
+        if (availableTickets >= ticketsRequested) {
+            System.out.println(userName + " is trying to book " + ticketsRequested + " tickets...");
+            try {
+                Thread.sleep(1000); // simulate delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            availableTickets -= ticketsRequested;
+            System.out.println("Booking successful for " + userName +
+                    ". Remaining tickets: " + availableTickets);
+        } else {
+            System.out.println("Not enough tickets for " + userName);
+        }
+    }
+
+    // ✅ With synchronization (Thread-Safe)
+    public synchronized void bookTicketSafe(String userName, int ticketsRequested) {
+        if (availableTickets >= ticketsRequested) {
+            System.out.println(userName + " is trying to book " + ticketsRequested + " tickets...");
+            try {
+                Thread.sleep(1000); // simulate delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            availableTickets -= ticketsRequested;
+            System.out.println("Booking successful for " + userName +
+                    ". Remaining tickets: " + availableTickets);
+        } else {
+            System.out.println("Not enough tickets for " + userName);
+        }
+    }
+}
+Step 2 – BookingThread Class
+package com.demo.javabasic;
+
+class BookingThread extends Thread {
+
+    private TicketCounter counter;
+    private String userName;
+    private int tickets;
+
+    public BookingThread(TicketCounter counter, String userName, int tickets) {
+        this.counter = counter;
+        this.userName = userName;
+        this.tickets = tickets;
+    }
+
+    @Override
+    public void run() {
+        // Change method here to test unsafe vs safe
+        counter.bookTicketSafe(userName, tickets);
+    }
+}
+
+Step 3 – Main Class
+package com.demo.javabasic;
+
+public class TicketBookingSimulation {
+
+    public static void main(String[] args) {
+
+        TicketCounter counter = new TicketCounter(5);
+
+        BookingThread user1 = new BookingThread(counter, "User1", 2);
+        BookingThread user2 = new BookingThread(counter, "User2", 2);
+        BookingThread user3 = new BookingThread(counter, "User3", 2);
+
+        user1.start();
+        user2.start();
+        user3.start();
+    }
+}
+
+OUTPUT
+User1 is trying to book 2 tickets...
+Booking successful for User1. Remaining tickets: 3
+User3 is trying to book 2 tickets...
+Booking successful for User3. Remaining tickets: 1
+Not enough tickets for User2
